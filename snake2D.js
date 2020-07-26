@@ -21,7 +21,7 @@ let snake = [];
 snake[0] = {
     x : 9 * box,
     y : 10 * box
-}
+};
 
 // create the food randomly using math. Math random create a number between
 // 0 and one. Math.random * (max - min) + min generates a random number between
@@ -62,12 +62,13 @@ function draw(){
         ctx.fillStyle = ( i == 0 || i % 2 == 0) ? "#006400" : "white";
         ctx.fillRect(snake[i].x, snake[i].y, box, box);
 
+        ctx.lineWidth = 1;
         ctx.strokeStyle = "orange";
         ctx.strokeRect(snake[i].x, snake[i].y, box, box);
     }
 
     // draw the food icon on the top
-    ctx.drawImage(iconImg, 13.5*box, 0.4*box);
+    ctx.drawImage(iconImg, 14.5*box, 0.4*box);
 
     //draw the actual food
     ctx.drawImage(foodImg, food.x, food.y);
@@ -76,14 +77,26 @@ function draw(){
     let snakeX = snake[0].x;
     let snakeY = snake[0].y;
 
-    //remove the tail
-    snake.pop();
-
     //which direction
     if( d == "LEFT") snakeX -= box;
     if( d == "UP") snakeY -= box;
     if( d == "RIGHT") snakeX += box;
     if( d == "DOWN") snakeY += box;
+
+    // Snake eats food
+    // If the Snake eat the food, we will only add new head
+    // and not remove the tale. If the snake does not eat the food
+    // we add a head and remove the tale to show movement
+    if(snakeX == food.x && snakeY == food.y) {
+        score++;
+        food = {
+            x : Math.floor(Math.random()*17+1) * box,
+            y : Math.floor(Math.random()*15+3) * box
+        }
+    }
+    else {
+        snake.pop();
+    }
 
     //add new head
     let newHead = {
@@ -96,7 +109,8 @@ function draw(){
     //draw the store on the top
     ctx.fillStyle = "white";
     ctx.font = "bold 45px Old Standard TT";
-    ctx.fillText(score, 16*box, 1.6*box);
+    ctx.fillText(score, 17*box, 1.6*box);
+
 }
 
 //call draw function every 100 ms
