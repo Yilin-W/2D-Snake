@@ -52,6 +52,17 @@ function direction(event){
     }
 }
 
+//check if snake hit himself 
+
+function collision(head, array){
+    for(let i = 0; i < array.length; i++) {
+        if(head.x == array[i].x && head.y == array[i].y){
+            return true;
+        }
+    }
+    return false;
+}
+
 // draw everything to the canvas
 
 function draw(){
@@ -68,7 +79,7 @@ function draw(){
     }
 
     // draw the food icon on the top
-    ctx.drawImage(iconImg, 14.5*box, 0.4*box);
+    ctx.drawImage(iconImg, 14.8*box, 0.4*box);
 
     //draw the actual food
     ctx.drawImage(foodImg, food.x, food.y);
@@ -104,9 +115,15 @@ function draw(){
         y : snakeY
     }
 
+    //game over
+
+    if(snakeX < 0 || snakeX > 18*box || snakeY > 18*box || (snakeY < 2*box && snakeX > 14*box) || (snakeY < 0 && snakeX < 14.5*box) || collision(newHead, snake)){
+        clearInterval(game);
+    }
+
     snake.unshift(newHead);
 
-    //draw the store on the top
+    //draw the score on the top
     ctx.fillStyle = "white";
     ctx.font = "bold 45px Old Standard TT";
     ctx.fillText(score, 17*box, 1.6*box);
